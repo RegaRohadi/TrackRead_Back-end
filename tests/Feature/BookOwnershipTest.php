@@ -38,4 +38,48 @@ class BookOwnershipTest extends TestCase
         $this->assertCount(1, $listResponse->json('data'));
         $this->assertSame('My personal book', $listResponse->json('data.0.name'));
     }
+
+    public function test_reading_stats_and_status_filtering(): void
+    {
+        $user = User::factory()->create();
+
+        Book::create([
+            'name' => 'Book 1',
+            'user_id' => $user->id,
+            'pages' => 200,
+            'pages_read' => 200,
+            'status' => 'finished',
+        ]);
+
+        Book::create([
+            'name' => 'Book 2',
+            'user_id' => $user->id,
+            'pages' => 300,
+            'pages_read' => 100,
+            'status' => 'currently_reading',
+        ]);
+
+        Book::create([
+            'name' => 'Book 3',
+            'user_id' => $user->id,
+            'pages' => 150,
+            'pages_read' => 0,
+            'status' => 'to_read',
+        ]);
+
+        $statsResponse = $this->actingAs($user, 'sanctum')->getJson('/api/v1/books/stats');
+        $statsResponse->assertOk();
+        $statsResponse->assertJsonPath('data.total_books', 3);
+        $statsResponse->assertJsonPath('data.status_breakdown.finished', 1);
+        $statsResponse->assertJsonPath('data.status_breakdown.currently_reading', 1);
+        $statsResponse->assertJsonPath('data.status_breakdown.to_read', 1);
+        $statsResponse->assertJsonPath('data.total_pages', 650);
+        $statsResponse->assertJsonPath('data.total_pages_read', 300);
+
+        // Test filtering by status
+        $filterResponse = $this->actingAs($user, 'sanctum')->getJson('/api/v1/books?status=finished');
+        $filterResponse->assertOk();
+        $filterResponse->assertJsonCount(1, 'data');
+        $filterResponse->assertJsonPath('data.0.name', 'Book 1');
+    }
 }

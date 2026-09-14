@@ -19,7 +19,6 @@ class StoreBookRequest extends FormRequest
             'publisher' => ['nullable', 'string', 'max:255'],
             'release_date' => ['nullable', 'date'],
             'description' => ['nullable', 'string'],
-            'isbn' => ['nullable', 'string', 'unique:books,isbn'],
             'genre' => ['nullable', 'string', 'max:100'],
             'pages' => ['nullable', 'integer', 'min:1'],
             'cover' => [
@@ -29,6 +28,8 @@ class StoreBookRequest extends FormRequest
                 'max:2048'
             ],
             'pages_read' => ['nullable', 'integer', 'min:0'],
+            'status' => ['nullable', 'string', 'in:to_read,currently_reading,finished,dropped'],
+            'pdf' => ['nullable', 'file', 'mimetypes:application/pdf', 'max:51200'],
         ];
     }
 }

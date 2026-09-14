@@ -12,6 +12,8 @@ interface BookRepositoryInterface
 
     public function find(int $id);
 
+    public function findVisibleOrFail(int $id);
+
     public function create(array $data);
 
     public function update(int $id, array $data);
@@ -19,4 +21,8 @@ interface BookRepositoryInterface
     public function delete(int $id);
 
     public function search(string $keyword, int $perPage = 10, array $filters = []);
+
+    public function getStats(int $userId): array;
+
+    public function continueReading(int $userId, int $limit = 6);
 }

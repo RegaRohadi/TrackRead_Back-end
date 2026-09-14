@@ -73,8 +73,8 @@ REST API backend for **TrackRead** — a personal book management and reading pr
    ```
 
 4. **Access the API:**
-   - Base URL: `http://localhost:8000/api/v1`
-   - Interactive API Docs: `http://localhost:8000/docs/api`
+   - Base URL: `http://localhost:8001/api/v1`
+   - Interactive API Docs: `http://localhost:8001/docs/api`
 
 ---
 

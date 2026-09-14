@@ -30,6 +30,16 @@ class BookService
         return $this->bookRepository->find($id);
     }
 
+    public function findVisibleOrFail(int $id)
+    {
+        return $this->bookRepository->findVisibleOrFail($id);
+    }
+
+    public function continueReading(int $userId, int $limit = 6)
+    {
+        return $this->bookRepository->continueReading($userId, $limit);
+    }
+
     public function createBook(array $data)
     {
         return $this->bookRepository->create($data);
@@ -48,5 +58,10 @@ class BookService
     public function searchBooks(string $keyword, int $perPage = 10, array $filters = [])
     {
         return $this->bookRepository->search($keyword, $perPage, $filters);
+    }
+
+    public function getReadingStats(int $userId): array
+    {
+        return $this->bookRepository->getStats($userId);
     }
 }

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookFileController;
+use App\Http\Controllers\ReadingProgressController;
 use App\Http\Controllers\Api\AuthController;
 
 Route::prefix('v1')->group(function () {
@@ -15,10 +17,18 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/books', [BookController::class, 'index']);
         Route::get('/books/genres', [BookController::class, 'genres']);
+        Route::get('/books/stats', [BookController::class, 'stats']);
+        Route::get('/books/continue', [BookController::class, 'continueReading']);
+        Route::get('/books/search', [BookController::class, 'search']);
+        Route::get('/books/{id}', [BookController::class, 'show']);
+        Route::get('/books/{id}/file', [BookFileController::class, 'show']);
+        Route::get('/books/{id}/progress', [ReadingProgressController::class, 'show']);
+        Route::put('/books/{id}/progress', [ReadingProgressController::class, 'update'])->middleware('throttle:60,1');
         Route::post('/books', [BookController::class, 'store']);
+        Route::post('/books/upload', [BookController::class, 'store']);
         Route::put('/books/{id}', [BookController::class, 'update']);
         Route::delete('/books/{id}', [BookController::class, 'delete']);
-
-        Route::get('/books/search', [BookController::class, 'search']);
     });
+
+    Route::get('/books/fetch-cover', [BookController::class, 'fetchCover']);
 });
